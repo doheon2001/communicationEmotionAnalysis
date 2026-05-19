@@ -1,3 +1,9 @@
 # Ignore raw data files and subdirectories
 /data/raw/*
 !/data/raw/.gitkeep
+
+# Exclude generated sample CSV files from gitignore
+!/data/raw/aihub_emotion_sample.csv
+!/data/raw/k_haters_sample.csv
+!/data/raw/k_mhas_sample.csv
+!/data/raw/team_chat_dummy.csv
