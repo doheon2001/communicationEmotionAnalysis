@@ -7,17 +7,20 @@ import pandas as pd
 # Define paths
 workspace_dir = os.path.dirname(os.path.abspath(__file__))
 raw_dir = os.path.join(workspace_dir, "data", "raw")
+processed_dir = os.path.join(workspace_dir, "data", "processed")
 os.makedirs(raw_dir, exist_ok=True)
+os.makedirs(processed_dir, exist_ok=True)
 
+# Input files (raw source data, read from data/raw/)
 aihub_xlsx_path = os.path.join(raw_dir, "018.감성대화", "Training_221115_add", "원천데이터", "감성대화말뭉치(최종데이터)_Training.xlsx")
 aihub_json_path = os.path.join(raw_dir, "018.감성대화", "Training_221115_add", "라벨링데이터", "감성대화말뭉치(최종데이터)_Training.json")
 k_haters_merged_path = os.path.join(raw_dir, "Selectstar_Tunip_HUMANELab_opendata", "Selectstar_Tunip_HUMANELab_opendata_merged.json")
 
-# Output files
-aihub_out = os.path.join(raw_dir, "aihub_emotion_sample.csv")
-k_haters_out = os.path.join(raw_dir, "k_haters_sample.csv")
-k_mhas_out = os.path.join(raw_dir, "k_mhas_sample.csv")
-team_chat_out = os.path.join(raw_dir, "team_chat_dummy.csv")
+# Output files (processed/derived data — sampled & label-mapped, written to data/processed/)
+aihub_out = os.path.join(processed_dir, "aihub_emotion_sample.csv")
+k_haters_out = os.path.join(processed_dir, "k_haters_sample.csv")
+k_mhas_out = os.path.join(processed_dir, "k_mhas_sample.csv")
+team_chat_out = os.path.join(processed_dir, "team_chat_dummy.csv")
 
 # Ensure required libraries are installed
 def install_dependencies():
