@@ -3,6 +3,10 @@
 !/data/raw/.gitkeep
 
 # Exclude generated sample CSV files from gitignore
+!/data/raw/aihub_emotion_raw_sample.csv
+!/data/raw/k_haters_raw_sample.csv
+!/data/raw/aihub_talkset_raw_sample.csv
+!/data/raw/k_mhas_raw_sample.csv
 !/data/raw/aihub_emotion_sample.csv
 !/data/raw/k_haters_sample.csv
 !/data/raw/k_mhas_sample.csv
