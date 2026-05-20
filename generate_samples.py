@@ -221,11 +221,33 @@ def sample_k_haters():
 def sample_k_mhas():
     print("\n--- 3. Generating K-MHAS Sample ---")
     try:
-        from datasets import load_dataset
-        print("Loading jeanlee/kmhas_korean_hate_speech from Hugging Face...")
-        dataset = load_dataset("jeanlee/kmhas_korean_hate_speech", split="train")
+        df = None
+        try:
+            from datasets import load_dataset
+            print("Loading jeanlee/kmhas_korean_hate_speech from Hugging Face...")
+            dataset = load_dataset("jeanlee/kmhas_korean_hate_speech", split="train")
+            df = pd.DataFrame(dataset)
+        except Exception as e_hf:
+            print(f"Hugging Face load failed: {e_hf}. Falling back to direct URL download...")
+            import urllib.request
+            url = "https://raw.githubusercontent.com/adlnlp/K-MHaS/main/data/kmhas_train.txt"
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as response:
+                content = response.read().decode('utf-8')
+            
+            lines = content.strip().split('\n')[1:] # Skip header
+            rows = []
+            for line in lines:
+                parts = line.strip().split('\t')
+                if len(parts) >= 2:
+                    text = parts[0]
+                    labels = [int(x) for x in parts[1].split(',') if x.strip()]
+                    rows.append({'text': text, 'label': labels})
+            df = pd.DataFrame(rows)
+
+        if df is None or len(df) == 0:
+            raise ValueError("Failed to load dataset from HF and direct URL fallback.")
         
-        df = pd.DataFrame(dataset)
         # Columns in K-MHAS: 'text' (comment), 'label' (list of label IDs)
         
         # Classes:
@@ -249,6 +271,7 @@ def sample_k_mhas():
             samples.append(sampled_cls)
             
         df_final = pd.concat(samples)
+        df_final = df_final.drop(columns=['label'])
         df_final = df_final.rename(columns={'text': 'sentence', 'label_str': 'label'})
         df_final = df_final[['sentence', 'label']]
         
@@ -302,7 +325,7 @@ def main():
     install_dependencies()
     sample_aihub_emotion()
     sample_k_haters()
-    # sample_k_mhas()  # Commented out as K-MHAS source files are not present locally yet
+    sample_k_mhas()  # Generate the K-MHAS sample dataset
     generate_team_chat_dummy()
     print("\nAll datasets generated successfully!")
 
